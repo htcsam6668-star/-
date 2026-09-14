@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#111827">
+<title>大板餘料計算器</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;background:#f3f4f6;color:#111827}
+.wrap{max-width:520px;margin:auto;padding:20px 16px 36px}.card{background:white;border-radius:20px;padding:20px;box-shadow:0 8px 30px #0001}
+h1{font-size:24px;margin:0 0 6px}.sub{color:#6b7280;font-size:14px;margin-bottom:20px}
+label{display:block;font-weight:700;margin:14px 0 6px}.unit{font-weight:400;color:#6b7280;font-size:13px}
+input{width:100%;font-size:20px;padding:13px 14px;border:1px solid #d1d5db;border-radius:12px;outline:none}
+input:focus{border-color:#111827}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button{width:100%;border:0;border-radius:12px;padding:14px;font-size:18px;font-weight:800;margin-top:20px;cursor:pointer}
+.calc{background:#111827;color:white}.clear{background:#e5e7eb;color:#111827;margin-top:10px}
+.result{margin-top:20px;background:#f9fafb;border-radius:16px;padding:18px;text-align:center}.result small{color:#6b7280}.price{font-size:34px;font-weight:900;margin-top:5px}
+.formula{font-size:13px;color:#6b7280;margin-top:12px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+<h1>大板餘料計算器</h1>
+<div class="sub">輸入尺寸（cm），系統會自動 ÷100 計算</div>
+
+<label>大板價格 <span class="unit">元</span></label>
+<input id="price" type="number" inputmode="decimal" placeholder="例如 99149">
+
+<div class="row">
+<div><label>大板長度 <span class="unit">cm</span></label><input id="L" type="number" inputmode="decimal" placeholder="320"></div>
+<div><label>大板深度 <span class="unit">cm</span></label><input id="D" type="number" inputmode="decimal" placeholder="160"></div>
+</div>
+
+<div class="row">
+<div><label>餘料長度 <span class="unit">cm</span></label><input id="rL" type="number" inputmode="decimal" placeholder="319"></div>
+<div><label>餘料深度 <span class="unit">cm</span></label><input id="rD" type="number" inputmode="decimal" placeholder="96"></div>
+</div>
+
+<button class="calc" onclick="calc()">計算餘料價格</button>
+<button class="clear" onclick="clearAll()">清除</button>
+
+<div class="result">
+<small>餘料價值</small>
+<div class="price" id="result">—</div>
+<div class="formula" id="detail">輸入資料後按「計算」</div>
+</div>
+</div></div>
+<script>
+function n(id){return Number(document.getElementById(id).value)}
+function fmt(x){return Math.round(x).toLocaleString('zh-TW')}
+function calc(){
+ const p=n('price'), L=n('L')/100, D=n('D')/100, rL=n('rL')/100, rD=n('rD')/100;
+ if([p,L,D,rL,rD].some(x=>!isFinite(x)||x<=0)){alert('請完整輸入 5 個正確數字');return}
+ const ans=p/L/D*rL*rD;
+ document.getElementById('result').textContent='NT$ '+fmt(ans);
+ document.getElementById('detail').textContent=`${p.toLocaleString()} ÷ ${L} ÷ ${D} × ${rL} × ${rD} = ${ans.toFixed(2)} 元`;
+}
+function clearAll(){
+ ['price','L','D','rL','rD'].forEach(id=>document.getElementById(id).value='');
+ document.getElementById('result').textContent='—';
+ document.getElementById('detail').textContent='輸入資料後按「計算」';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter')calc()});
+</script>
+</body></html>
